@@ -20,8 +20,8 @@ import core.Word;
 public class WordPanel extends JPanel{
 	private static final long serialVersionUID = 1L;
 	
-	private static final int width = 500;
-	private static final int height = 480;
+	private int width;
+	private int height;
 	
 	private Word curWord = null;
 	
@@ -30,7 +30,10 @@ public class WordPanel extends JPanel{
 	private DefinitionTabPanel definitionArea;
 	private ImagePanel imageArea;
 	
-	public WordPanel() {
+	public WordPanel(int width, int height) {
+		this.width = width;
+		this.height = height;
+		
 		setBackground(Color.white);
 		setPreferredSize(new Dimension(width, height));
 		setLayout(null);
@@ -68,14 +71,18 @@ public class WordPanel extends JPanel{
         add(phoneticArea);
         
        
-        wordArea.setBounds(20, 0, 500, 60);
-        phoneticArea.setBounds(20, 60, 500, 20);  
-        definitionArea.setBounds(20, 100, 400, 300);
-        imageArea.setBounds(200, 10, 100, 100);
+        wordArea.setBounds(20, 40, 500, 60);
+        phoneticArea.setBounds(20, 100, 500, 20);  
+        definitionArea.setBounds(20, 140, 400, 300);
+        imageArea.setBounds(200, 40, 100, 100);
         
 	}
 	
 	public void setCurWord(Word newword) {
+		if (newword == null) {
+			return;
+		}
+		
 		curWord = newword;
         
         wordArea.setVisible(true);

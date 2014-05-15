@@ -51,7 +51,7 @@ public class DefinitionTabCard extends JPanel{
 		exampleArea = new JPanel();
 		int nexample = definition.examples.size();
 		exampleArea.setLayout(new GridLayout(nexample, 1));
-		
+		exampleArea.setBackground(Color.WHITE);
 		for (int i=0; i<nexample; i++) {
 			JTextArea exaText = new JTextArea();
 			exaText.setFont(new Font("Serif", Font.PLAIN, 12));

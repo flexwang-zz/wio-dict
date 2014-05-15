@@ -3,121 +3,156 @@ package ui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Insets;
+import java.awt.EventQueue;
+import java.awt.FileDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
+import java.util.Vector;
 
-
-
-
-
-
-
-
-
-
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.UIManager;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import ui.leftpart.ListPanel;
 import ui.rightpart.WordPanel;
 import core.Word;
+import core.WordBook;
 
-public class Mainframe extends JFrame implements ActionListener,MouseMotionListener,MouseListener, ItemListener{
+public class Mainframe extends JFrame implements ActionListener,
+		DocumentListener {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private WordPanel wordPanel;
 	private ListPanel listPanel;
-	
-	//window size
+
+	// tool bar
+	private JToolBar topToolBar;
+	private JButton openWordBook;
+	private JTextField wordSearchField;
+	private JComboBox<String> wordSearchTips;
+
+	// ActionCommand string
+	private final static String OpenWordBook = "openwordbook";
+	private final static String SearchWord = "searchword";
+
+	// window size
 	private static final int width = 700;
 	private static final int height = 500;
-	
+
+	private WordBook wordbook;
+
 	public Mainframe() {
 	}
-	
+
 	public void CreateUI() {
 		setPreferredSize(new Dimension(width, height));
 		setResizable(false);
 		setLayout(new BorderLayout());
-		
+
+		// bottom
 		JPanel bottom = new JPanel();
+		bottom.setPreferredSize(new Dimension(width, 480));
 		bottom.setLayout(new BorderLayout());
-		
-		wordPanel = new WordPanel();
+
+		wordPanel = new WordPanel(400, 400);
 		bottom.add(wordPanel, BorderLayout.EAST);
-		
+
 		listPanel = new ListPanel();
 		bottom.add(listPanel, BorderLayout.WEST);
-		
+
+		// top
+		topToolBar = new JToolBar();
+		topToolBar.setBackground(Color.WHITE);
+		topToolBar.setPreferredSize(new Dimension(width, 30));
+
+		openWordBook = new JButton("Open");
+		openWordBook.setActionCommand(OpenWordBook);
+		openWordBook.addActionListener(this);
+		topToolBar.add(openWordBook);
+
+		wordSearchTips = new JComboBox<String>();
+		wordSearchTips.setEditable(true);
+		wordSearchTips.setSelectedIndex(-1);
+		wordSearchField = (JTextField) wordSearchTips.getEditor()
+				.getEditorComponent();
+		// wordSearchField = new JTextField(10);
+		wordSearchField.setActionCommand(SearchWord);
+		wordSearchField.getDocument().addDocumentListener(this);
+		wordSearchField.addActionListener(this);
+
+		topToolBar.add(wordSearchTips);
+
+		add(topToolBar, BorderLayout.NORTH);
 		add(bottom, BorderLayout.SOUTH);
-		
+
 		pack();
 		setVisible(true);
-		
-		this.addMouseListener(this);
-	}
-	
-	@Override
-	public void mouseClicked(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		wordPanel.setCurWord(new Word());
+
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent arg0) {
+	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		
+
+		if (e.getActionCommand().equals(OpenWordBook)) {
+			FileDialog fd = new FileDialog(Mainframe.this, "Choose a file",
+					FileDialog.LOAD);
+			fd.setFile("*.xml");
+			fd.setVisible(true);
+			String filename = fd.getDirectory() + fd.getFile();
+			if (filename != null) {
+				wordbook = new WordBook(filename);
+			}
+		} else if (e.getActionCommand().equals(SearchWord)) {
+			String keyword = wordSearchField.getText().trim();
+			wordPanel.setCurWord(wordbook.search(keyword));
+		}
 	}
 
 	@Override
-	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
+	public void changedUpdate(DocumentEvent e) {
+
 	}
 
 	@Override
-	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
+	public void insertUpdate(DocumentEvent e) {
+		// this.wordPanel.setCurWord(wordbook.search(this.wordSearchField.getText().trim()));
+		EventQueue.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				String keyword = wordSearchField.getText().trim();
+				ArrayList<String> tips = wordbook.findTips(keyword, 10);
+				DefaultComboBoxModel<String> m = new DefaultComboBoxModel<>();
+				;
+				for (String s : tips) {
+					m.addElement(s);
+				}
+				String str[] = tips.toArray(new String[tips.size()]);
+				Mainframe.this.wordSearchTips.setModel(m);
+				wordSearchTips.setSelectedIndex(-1);
+				((JTextField)wordSearchTips.getEditor().getEditorComponent()).setText(keyword);
+				wordSearchTips.showPopup();
+				// ((JTextField)wordSearchTips.getEditor().getEditorComponent()).setText(str);
+				System.out.println("tips");
+				for (int i = 0, size = str.length; i < size; i++) {
+					System.out.println(tips.get(i));
+				}
+				//validate();
+			}
+		});
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
+	public void removeUpdate(DocumentEvent e) {
+		this.wordPanel.setCurWord(wordbook.search(this.wordSearchField
+				.getText().trim()));
 	}
-
-	@Override
-	public void mouseDragged(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void itemStateChanged(ItemEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	
 }
