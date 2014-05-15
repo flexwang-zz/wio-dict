@@ -25,7 +25,7 @@ public class Example {
 	public Example(Node node) {
 		sentence = "";
 		meaning = "";
-
+		
 		NodeList nodelist = node.getChildNodes();
 
 		for (int i = 0, length = nodelist.getLength(); i < length; i++) {
@@ -35,6 +35,5 @@ public class Example {
 				meaning = nodelist.item(i).getTextContent();
 			}
 		}
-
 	}
 }

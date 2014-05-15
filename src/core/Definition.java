@@ -1,6 +1,6 @@
 package core;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -14,23 +14,23 @@ public class Definition {
 	
 	public String language;
 	public String content;
-	public Vector<Example> examples;
+	public ArrayList<Example> examples;
 	
 	public Definition() {
 		language = "";
 		content = "";
-		examples = new Vector<Example>();
+		examples = new ArrayList<Example>();
 	}
 	
 	public Definition(String language, String content) {
 		this.language = language;
 		this.content = content;
-		examples = new Vector<Example>();
+		examples = new ArrayList<Example>();
 	}
 	
 	public Definition(Node node) {
 		language = ((Element)node).getAttribute(LANGUAGE);
-		examples = new Vector<Example>();
+		examples = new ArrayList<Example>();
 		
 		NodeList nodelist = node.getChildNodes();
 		for (int i=0, length=nodelist.getLength(); i<length; i++) {

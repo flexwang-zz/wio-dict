@@ -2,7 +2,6 @@ package core.trie;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Vector;
 
 
 public class TrieTree<T> {
@@ -36,7 +35,6 @@ public class TrieTree<T> {
 	}
 	
 	public T search(String word) {
-		System.out.println(word);
 		String keyword = word;
 		TrieNode<T> p = root;
 		

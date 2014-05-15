@@ -39,6 +39,9 @@ public class WordBook {
 		return trieTree.findTips(keyword, maxtips);
 	}
 	
+	public ArrayList<String> toList() {
+		return trieTree.findTips("", trieTree.size());
+	}
 	public WordBook(String filename) {
 		InputStream is;
 		try {

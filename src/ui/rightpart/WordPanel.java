@@ -82,7 +82,6 @@ public class WordPanel extends JPanel{
 		if (newword == null) {
 			return;
 		}
-		
 		curWord = newword;
         
         wordArea.setVisible(true);
