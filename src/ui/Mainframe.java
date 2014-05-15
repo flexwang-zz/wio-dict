@@ -7,6 +7,8 @@ import java.awt.EventQueue;
 import java.awt.FileDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -17,6 +19,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -26,7 +29,7 @@ import core.Word;
 import core.WordBook;
 
 public class Mainframe extends JFrame implements ActionListener,
-		DocumentListener {
+		KeyListener {
 
 	private static final long serialVersionUID = 1L;
 
@@ -85,7 +88,7 @@ public class Mainframe extends JFrame implements ActionListener,
 				.getEditorComponent();
 		// wordSearchField = new JTextField(10);
 		wordSearchField.setActionCommand(SearchWord);
-		wordSearchField.getDocument().addDocumentListener(this);
+		wordSearchField.addKeyListener(this);
 		wordSearchField.addActionListener(this);
 
 		topToolBar.add(wordSearchTips);
@@ -118,41 +121,41 @@ public class Mainframe extends JFrame implements ActionListener,
 	}
 
 	@Override
-	public void changedUpdate(DocumentEvent e) {
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void insertUpdate(DocumentEvent e) {
-		// this.wordPanel.setCurWord(wordbook.search(this.wordSearchField.getText().trim()));
-		EventQueue.invokeLater(new Runnable() {
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
 				String keyword = wordSearchField.getText().trim();
 				ArrayList<String> tips = wordbook.findTips(keyword, 10);
-				DefaultComboBoxModel<String> m = new DefaultComboBoxModel<>();
-				;
+				DefaultComboBoxModel<String> m = new DefaultComboBoxModel<String>();
+
 				for (String s : tips) {
 					m.addElement(s);
 				}
 				String str[] = tips.toArray(new String[tips.size()]);
 				Mainframe.this.wordSearchTips.setModel(m);
 				wordSearchTips.setSelectedIndex(-1);
-				((JTextField)wordSearchTips.getEditor().getEditorComponent()).setText(keyword);
+				((JTextField) wordSearchTips.getEditor().getEditorComponent())
+						.setText(keyword);
 				wordSearchTips.showPopup();
-				// ((JTextField)wordSearchTips.getEditor().getEditorComponent()).setText(str);
 				System.out.println("tips");
 				for (int i = 0, size = str.length; i < size; i++) {
 					System.out.println(tips.get(i));
 				}
-				//validate();
 			}
 		});
-	}
-
-	@Override
-	public void removeUpdate(DocumentEvent e) {
-		this.wordPanel.setCurWord(wordbook.search(this.wordSearchField
-				.getText().trim()));
 	}
 }
