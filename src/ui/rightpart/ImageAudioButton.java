@@ -1,5 +1,7 @@
 package ui.rightpart;
 
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -10,6 +12,7 @@ import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URL;
 
 import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
@@ -27,7 +30,7 @@ public class ImageAudioButton extends JLabel implements MouseListener {
 	private Image curIcon;
 	private int width, height;
 	private boolean valid = false;
-	private Clip clip = null;
+	private AudioClip clip = null;
 
 	public ImageAudioButton(int width, int height, 
 			String normal, String pressed, String disabled) {
@@ -54,8 +57,7 @@ public class ImageAudioButton extends JLabel implements MouseListener {
 	protected void paintComponent(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g.create();
 		if (curIcon != null) {
-			g2d.drawImage(img, 0, 0, width, height, sx1, sy1, sx2, sy2, bgcolor, observer)
-			g2d.drawImage(curIcon, 0, 0, width, height, null);
+			g2d.drawImage(curIcon, 0, 0, width, height, 0, 0, curIcon.getWidth(null), curIcon.getHeight(null), null);
 		}
 		g2d.dispose();
 	}
@@ -65,16 +67,20 @@ public class ImageAudioButton extends JLabel implements MouseListener {
 			clip = null;
 			curIcon = disabledicon;
 			valid = false;
+			validate();
 			return;
 		}
 		try {
-			clip = AudioSystem.getClip();
-			AudioInputStream inputStream = AudioSystem
-					.getAudioInputStream(new FileInputStream(filepath));
-			clip.open(inputStream);
+			System.out.println(filepath);
+			//clip = AudioSystem.getClip();
+			//AudioInputStream inputStream = AudioSystem
+				//	.getAudioInputStream(new File(filepath).getAbsoluteFile());
+			//clip.open(inputStream);
+			clip = Applet.newAudioClip(
+					new URL("file://"+filepath));
 			curIcon = normalicon;
-		} catch (LineUnavailableException | UnsupportedAudioFileException
-				| IOException e) {
+			valid = true;
+		} catch (IOException e) {
 			clip = null;
 			curIcon = disabledicon;
 			valid = false;
@@ -85,13 +91,14 @@ public class ImageAudioButton extends JLabel implements MouseListener {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (valid) {
-			clip.start();
+			clip.play();
 		}
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		if (valid) {
+			System.out.println("entered");
 			setCursor(new Cursor(Cursor.HAND_CURSOR));
 			curIcon = pressedicon;
 		}

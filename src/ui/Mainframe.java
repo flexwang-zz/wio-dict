@@ -113,7 +113,7 @@ public class Mainframe extends JFrame implements ActionListener, KeyListener,
 			fd.setVisible(true);
 			if (fd.getFile() != null && fd.getDirectory() != null) {
 				String filename = fd.getDirectory() + fd.getFile();
-
+				System.setProperty("user.dir", fd.getDirectory());
 				System.out.println(filename);
 				wordbook = new WordBook(filename);
 				listPanel.setWordBook(wordbook);
