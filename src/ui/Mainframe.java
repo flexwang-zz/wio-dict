@@ -29,7 +29,7 @@ public class Mainframe extends JFrame implements ActionListener, KeyListener,
 		MouseListener {
 
 	private static final long serialVersionUID = 1L;
-
+	
 	private WordPanel wordPanel;
 	private ListPanel listPanel;
 
@@ -50,19 +50,18 @@ public class Mainframe extends JFrame implements ActionListener, KeyListener,
 	private static final int wordpanelwidth = 500;
 	private static final int toolbarheight = 30;
 
-	private WordBook wordbook;
+	private WordBook wordbook = null;
 
 	public Mainframe() {
+		setPreferredSize(new Dimension(width, height));
+		setResizable(false);
 	}
 
 	public void CreateUI() {
-		setPreferredSize(new Dimension(width, height));
-		setResizable(false);
-		setLayout(new BorderLayout());
-
+		setLayout(null);
 		// bottom
 		JPanel bottom = new JPanel();
-		bottom.setPreferredSize(new Dimension(width, 480));
+		bottom.setPreferredSize(new Dimension(width, height - toolbarheight));
 		bottom.setLayout(new BorderLayout());
 
 		wordPanel = new WordPanel(wordpanelwidth, height - toolbarheight);
@@ -95,8 +94,10 @@ public class Mainframe extends JFrame implements ActionListener, KeyListener,
 
 		topToolBar.add(wordSearchTips);
 
-		add(topToolBar, BorderLayout.NORTH);
-		add(bottom, BorderLayout.SOUTH);
+		topToolBar.setBounds(0, 0, width, toolbarheight);
+		bottom.setBounds(0, toolbarheight, width, height - toolbarheight);
+		add(topToolBar);
+		add(bottom);
 
 		pack();
 		setVisible(true);
@@ -110,10 +111,13 @@ public class Mainframe extends JFrame implements ActionListener, KeyListener,
 					FileDialog.LOAD);
 			fd.setFile("*.xml");
 			fd.setVisible(true);
-			String filename = fd.getDirectory() + fd.getFile();
-			if (filename != null) {
+			if (fd.getFile() != null && fd.getDirectory() != null) {
+				String filename = fd.getDirectory() + fd.getFile();
+
+				System.out.println(filename);
 				wordbook = new WordBook(filename);
 				listPanel.setWordBook(wordbook);
+
 			}
 		}
 	}
@@ -134,6 +138,7 @@ public class Mainframe extends JFrame implements ActionListener, KeyListener,
 				String keyword = wordSearchField.getText().trim();
 				wordPanel.setCurWord(wordbook.search(keyword));
 				shouldHide = true;
+				listPanel.wordlist.setSelectedValue(keyword, true);
 				break;
 			case KeyEvent.VK_ESCAPE:
 				shouldHide = true;
@@ -141,10 +146,13 @@ public class Mainframe extends JFrame implements ActionListener, KeyListener,
 			default:
 				break;
 			}
-		} else if(e.getComponent() == listPanel.wordlist) {
+		} else if (e.getComponent() == listPanel.wordlist) {
 			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-				String keyword = listPanel.wordlist.getSelectedValue();
-				wordPanel.setCurWord(wordbook.search(keyword));
+				if (wordbook != null) {
+					String keyword = listPanel.wordlist.getSelectedValue();
+					listPanel.lastselect = keyword;
+					wordPanel.setCurWord(wordbook.search(keyword));
+				}
 			}
 		}
 	}
@@ -159,6 +167,9 @@ public class Mainframe extends JFrame implements ActionListener, KeyListener,
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
+					if (wordbook == null) {
+						return;
+					}
 					String keyword = wordSearchField.getText().trim();
 
 					if (keyword.isEmpty()) {
@@ -186,7 +197,17 @@ public class Mainframe extends JFrame implements ActionListener, KeyListener,
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-
+		if (e.getComponent() == listPanel.wordlist) {
+			if (e.getButton() == MouseEvent.BUTTON1) {
+				if (wordbook != null) {
+					String keyword = listPanel.wordlist.getSelectedValue();
+					if (listPanel.lastselect.equals(keyword)) {
+						wordPanel.setCurWord(wordbook.search(keyword));
+					}
+					listPanel.lastselect = keyword;
+				}
+			}
+		}
 	}
 
 	@Override

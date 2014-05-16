@@ -1,8 +1,5 @@
 package ui;
 
-import java.util.Map;
-import java.util.TreeMap;
-
 class A {
 	public int a;
 	public A(int a) {

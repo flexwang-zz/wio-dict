@@ -1,27 +1,20 @@
 package ui.rightpart;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.GridLayout;
 import java.awt.Insets;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.UIManager;
+
 
 import core.Word;
 
 public class WordPanel extends JPanel{
 	private static final long serialVersionUID = 1L;
-	
-	private int width;
-	private int height;
 	
 	private Word curWord = null;
 	
@@ -29,10 +22,9 @@ public class WordPanel extends JPanel{
 	private JTextArea phoneticArea;
 	private DefinitionTabPanel definitionArea;
 	private ImagePanel imageArea;
+	private ImageAudioButton pronounceButton;
 	
 	public WordPanel(int width, int height) {
-		this.width = width;
-		this.height = height;
 		
 		setBackground(Color.white);
 		setPreferredSize(new Dimension(width, height));
@@ -59,20 +51,26 @@ public class WordPanel extends JPanel{
         definitionArea = new DefinitionTabPanel();
         
         imageArea = new ImagePanel(100, 100);
+        pronounceButton = new ImageAudioButton(48, 48, 
+        		"./res/images/dict_pronounce-_icon_normal.png", 
+        		"./res/images/dict_pronounce-_icon_pressed.png", 
+        		"./res/images/dict_pronounce-_icon_disable.png");
         
         wordArea.setVisible(false);
         phoneticArea.setVisible(false);
         definitionArea.setVisible(false);
         imageArea.setVisible(false);
+        pronounceButton.setVisible(false);
         
         add(imageArea);
         add(definitionArea);
         add(wordArea);
         add(phoneticArea);
-        
+        add(pronounceButton);
        
         wordArea.setBounds(20, 40, 500, 60);
-        phoneticArea.setBounds(20, 100, 500, 20);  
+        phoneticArea.setBounds(20, 100, 300, 20); 
+        pronounceButton.setBounds(300, 100, 48, 48);
         definitionArea.setBounds(20, 140, 400, 300);
         imageArea.setBounds(200, 40, 100, 100);
         
@@ -88,9 +86,11 @@ public class WordPanel extends JPanel{
         phoneticArea.setVisible(true);
         definitionArea.setVisible(true);
         imageArea.setVisible(true);
+        pronounceButton.setVisible(true);
         
         definitionArea.setCurWord(curWord);
         imageArea.setImage(curWord.image_url);
+        pronounceButton.setAudio(curWord.sound_url);
 	}
 	
 	public void paint(Graphics g)

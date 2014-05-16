@@ -2,13 +2,9 @@ package ui.rightpart;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Insets;
 import java.util.Vector;
 
-import javax.swing.BorderFactory;
 import javax.swing.JTabbedPane;
-import javax.swing.UIManager;
-import javax.swing.border.Border;
 
 import core.Definition;
 import core.Word;

@@ -48,7 +48,10 @@ public class WordBook {
 			is = new FileInputStream(filename);
 			Document document = parse(is);
 			parseWordBook(document);
+			is.close();
 		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
