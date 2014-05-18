@@ -42,7 +42,7 @@ public class CopyOfFancyWindow extends JDialog{
 		super(parent, title);
 		setUndecorated(true);
 		setResizable(false);
-		setBackground(new Color(0,0,0,0));
+		//setBackground(new Color(255,255,255,0));
 		setContentPane(createContentPane());
 		initComponents();
 		setSize(200, 300);
@@ -120,11 +120,11 @@ public class CopyOfFancyWindow extends JDialog{
 
 				LinearGradientPaint paint = new LinearGradientPaint(0, 0, 0, getHeight(),
 						new float[] {.0f, .499f, .5f, 1.0f},
-						new Color[] {new Color(0x858585),
-							new Color(0x3c3c3c),
-							new Color(0x2c2c2c),
-							new Color(0x333334)});
-				g2.setPaint(paint);
+						new Color[] {new Color(255, 0 ,0,  0),
+					new Color(255, 0 ,0,  0),
+					new Color(255, 0 ,0,  0),
+					new Color(255, 0 ,0,  0),});
+				//g2.setPaint(paint);
 				Shape shape = new RoundRectangle2D.Float(0,0,getWidth(), getHeight(), 16, 16);
 				g2.fill(shape);
 				g2.setComposite(old);

@@ -25,6 +25,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -36,7 +37,7 @@ import javax.swing.event.MouseInputListener;
 import ui.leftpart.ListPanel;
 import ui.rightpart.WordPanel;
 
-public class FancyWindow extends JDialog{
+public class FancyWindow extends JFrame{
 	private JComponent titlePane, contentPane, bottomPane;
 	private JLabel titleLabel, resizeLabel;
 	private JButton closeButton;
@@ -61,10 +62,10 @@ public class FancyWindow extends JDialog{
 	private JComboBox<String> wordSearchTips;
 	private Boolean shouldHide;
 	public FancyWindow(Frame parent, String title){
-		super(parent, title);
+		super(title);
 		setUndecorated(true);
 		setResizable(false);
-		setBackground(new Color(200,200,200,0));
+		setBackground(new Color(255,255,255,0));
 		setContentPane(createContentPane());
 		initComponents();
 	//	CreateUI();
@@ -191,13 +192,13 @@ public class FancyWindow extends JDialog{
 
 				LinearGradientPaint paint = new LinearGradientPaint(0, 0, 0, getHeight(),
 						new float[] {.0f, .499f, .5f, 1.0f},
-						new Color[] {new Color(200,200,200,0),
-					new Color(200,200,200,0),
-					new Color(200,200,200,0),
-					new Color(200,200,200,0)});
+						new Color[] {new Color(255,0,0,0),
+					new Color(255,0,0,0),
+					new Color(255,0,0,0),
+					new Color(255,0,0,0)});
 				g2.setPaint(paint);
 				Shape shape = new RoundRectangle2D.Float(0,0,getWidth(), getHeight(), 16, 16);
-				g2.fill(shape);
+				g2.fill(shape);                                               
 				g2.setComposite(old);
 				g2.dispose();
 			}
