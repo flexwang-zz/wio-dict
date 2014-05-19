@@ -15,6 +15,8 @@ import javax.swing.JComponent;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 public class TitlePane extends JComponent {
+	private static final long serialVersionUID = -7845009697666749318L;
+
 	public TitlePane() {
 	}
 
