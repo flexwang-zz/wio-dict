@@ -21,8 +21,9 @@ public class TitlePane extends JComponent {
 	}
 
 	protected void paintComponent(Graphics g) {
-		setOpaque(false);
-		Graphics2D g2 = (Graphics2D) g.create();
+		g.setColor(Color.RED);
+		//setOpaque(false);
+	/*	Graphics2D g2 = (Graphics2D) g.create();
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		Composite old = g2.getComposite();
@@ -37,10 +38,11 @@ public class TitlePane extends JComponent {
 		g2.setBackground(Color.RED);
 		Shape shape = new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(),
 				16, 16);
-		g2.fill(shape);
+		//g2.fill(shape);
 		g2.setComposite(old);
 		g2.dispose();
 		System.out.println("Draw");
+		*/
 	}
 
 }
