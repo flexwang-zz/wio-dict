@@ -34,11 +34,13 @@ public class TitlePane extends JComponent {
 				new Color[] { new Color(0, 255, 0, 0), new Color(255, 0, 0, 0),
 						new Color(0, 255, 0, 0), new Color(0, 0, 255, 0), });
 		g2.setPaint(paint);
+		g2.setBackground(Color.RED);
 		Shape shape = new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(),
 				16, 16);
 		g2.fill(shape);
 		g2.setComposite(old);
 		g2.dispose();
+		System.out.println("Draw");
 	}
 
 }

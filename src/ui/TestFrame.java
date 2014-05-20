@@ -1,37 +1,30 @@
 	package ui;
-	
-	import java.awt.BorderLayout;
-import java.awt.Color;
+
+import java.awt.Dialog;
 import java.awt.Dimension;
-	
+import java.awt.Frame;
+import java.awt.MouseInfo;
+import java.awt.Point;
+import java.awt.Window;
+import java.awt.event.MouseEvent;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-
-	import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
+import javax.swing.event.MouseInputListener;
 	
-	public class TestFrame extends JFrame implements DocumentListener, KeyListener {
+	
+	public class TestFrame extends JFrame{
 	
 		private static final long serialVersionUID = 1L;
-	
-		// tool bar
-		private JToolBar topToolBar;
-		private JTextField wordSearchField;
-		private JComboBox<String> wordSearchTips;
-	
-		// window size
-		private static final int width = 700;
-		private static final int height = 500;
+		private Window w = this;
+		private JComponent titlePane;
 	
 		public TestFrame() {
+			setUndecorated(true);
+			setResizable(false);
+			setPreferredSize(new Dimension(500, 500));
+			setResizable(false);
 		}
 	
 		public static void main(String[] argv) {
@@ -39,89 +32,78 @@ import javax.swing.event.DocumentListener;
 		}
 	
 		public void CreateUI() {
-			setPreferredSize(new Dimension(width, height));
-			setResizable(false);
-			setLayout(new BorderLayout());
-	
-			// bottom
-			JPanel bottom = new JPanel();
-			bottom.setPreferredSize(new Dimension(width, 480));
-			bottom.setLayout(new BorderLayout());
-	
-			// top
-			topToolBar = new JToolBar();
-			topToolBar.setBackground(Color.WHITE);
-			topToolBar.setPreferredSize(new Dimension(width, 30));
-	
-			wordSearchTips = new JComboBox<String>();
-			wordSearchTips.setEditable(true);
-			wordSearchTips.setSelectedIndex(-1);
-			wordSearchField = (JTextField) wordSearchTips.getEditor()
-					.getEditorComponent();
-			wordSearchField.getDocument().addDocumentListener(this);
-			wordSearchField.addKeyListener(this);
-			topToolBar.add(wordSearchTips);
-	
-			add(topToolBar, BorderLayout.NORTH);
-			add(bottom, BorderLayout.SOUTH);
-	
+			titlePane = new TitlePane();
+			MouseInputListener m = new MouseInputHandler();
+			titlePane.addMouseMotionListener(m);
+
+			add(titlePane);
 			pack();
 			setVisible(true);
 	
 		}
 	
-		@Override
-		public void changedUpdate(DocumentEvent e) {
-	
-		}
-		
-		private String last = "";
-		@Override
-		public void insertUpdate(DocumentEvent e) {
 
-			
-		}
-	
-		@Override
-		public void removeUpdate(DocumentEvent e) {
-		}
+		private class MouseInputHandler implements MouseInputListener {
+	        private boolean isMovingWindow;
+	        private int dragOffsetX;
+	        private int dragOffsetY;
+	        private static final int BORDER_DRAG_THICKNESS = 5;
 
-		@Override
-		public void keyPressed(KeyEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
+	        public void mousePressed(MouseEvent ev) {
+	            Point dragWindowOffset = ev.getPoint();
+	            if (w != null) {
+	                w.toFront();
+	            }
+	            Point convertedDragWindowOffset = SwingUtilities.convertPoint(
+	                           w, dragWindowOffset, titlePane);
 
-		@Override
-		public void keyReleased(KeyEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
+	            Frame f = null;
+	            Dialog d = null;
 
-		@Override
-		public void keyTyped(KeyEvent arg0) {
-			// TODO Auto-generated method stub
-			SwingUtilities.invokeLater(new Runnable(){
+	            if (w instanceof Frame) {
+	                f = (Frame)w;
+	            } else if (w instanceof Dialog) {
+	                d = (Dialog)w;
+	            }
 
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					String keyword = wordSearchField.getText().trim();
-					if (last.equals(keyword)) {
-						//return;
-					}
-					
-					last = keyword;
-					DefaultComboBoxModel<String> m = new DefaultComboBoxModel<String>();
-					;
-					for (int i = 0; i < 10; i++) {
-						m.addElement(i + "");
-					}
-					wordSearchTips.setModel(m);
-					wordSearchTips.setSelectedIndex(-1);
-					((JTextField) wordSearchTips.getEditor().getEditorComponent())
-							.setText(keyword);
-					wordSearchTips.showPopup();
-				}});
+	            int frameState = (f != null) ? f.getExtendedState() : 0;
+
+	            if (titlePane.contains(convertedDragWindowOffset)) {
+	                if ((f != null && ((frameState & Frame.MAXIMIZED_BOTH) == 0)
+	                        || (d != null))
+	                        && dragWindowOffset.y >= BORDER_DRAG_THICKNESS
+	                        && dragWindowOffset.x >= BORDER_DRAG_THICKNESS
+	                        && dragWindowOffset.x < w.getWidth()
+	                            - BORDER_DRAG_THICKNESS) {
+	                    isMovingWindow = true;
+	                    dragOffsetX = dragWindowOffset.x;
+	                    dragOffsetY = dragWindowOffset.y;
+	                }
+	            }
+	            else if (f != null && f.isResizable()
+	                    && ((frameState & Frame.MAXIMIZED_BOTH) == 0)
+	                    || (d != null && d.isResizable())) {
+	                dragOffsetX = dragWindowOffset.x;
+	                dragOffsetY = dragWindowOffset.y;
+	            }
+	        }
+
+	        public void mouseReleased(MouseEvent ev) {
+	            isMovingWindow = false;
+	        }
+
+	        public void mouseDragged(MouseEvent ev) {
+	            if (isMovingWindow) {
+	                Point windowPt = MouseInfo.getPointerInfo().getLocation();
+	                windowPt.x = windowPt.x - dragOffsetX;
+	                windowPt.y = windowPt.y - dragOffsetY;
+	                w.setLocation(windowPt);
+	            }
+	        }
+
+	        public void mouseClicked(MouseEvent e) {}
+	        public void mouseEntered(MouseEvent e) {}
+	        public void mouseExited(MouseEvent e) {}
+	        public void mouseMoved(MouseEvent e) {}
 		}
 	}

@@ -111,14 +111,14 @@ public class CopyOfMainframe extends JFrame implements ActionListener, KeyListen
 		topToolBar.setBounds(0, 0, width, toolbarheight);
 		bottom.setBounds(0, toolbarheight, width, height - toolbarheight);
 		//add(topToolBar);
-		TitlePane tilepane = new TitlePane();
+		titlePane = new TitlePane();
 		MouseInputHandler handler = new MouseInputHandler();
 		
 		System.out.println(handler==null);
-		//titlePane.addMouseListener(handler);
-		//titlePane.addMouseMotionListener(handler);
-		tilepane.setBounds(0, 0, width, toolbarheight);
-		add(tilepane);
+		titlePane.addMouseListener(handler);
+		titlePane.addMouseMotionListener(handler);
+		titlePane.setBounds(0, 0, width, toolbarheight);
+		add(titlePane);
 		add(bottom);
 		pack();
 		setVisible(true);
@@ -275,8 +275,8 @@ public class CopyOfMainframe extends JFrame implements ActionListener, KeyListen
             Frame f = null;
             Dialog d = null;
 
-            if (w instanceof Frame) {
-                f = (Frame)w;
+            if (w instanceof JFrame) {
+                f = (JFrame)w;
             } else if (w instanceof Dialog) {
                 d = (Dialog)w;
             }
