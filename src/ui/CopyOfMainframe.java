@@ -1,13 +1,21 @@
 package ui;
 
+import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.LinearGradientPaint;
 import java.awt.MouseInfo;
+import java.awt.Paint;
 import java.awt.Point;
+import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,6 +23,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
 
 import javax.swing.DefaultComboBoxModel;
@@ -56,8 +65,8 @@ public class CopyOfMainframe extends JFrame implements ActionListener, KeyListen
 	private static final int height = 500;
 	private static final int wordpanelwidth = 500;
 	private static final int toolbarheight = 30;
+	private static final int titlepaneheight = 30;
 
-	private Window w = this;
 	private WordBook wordbook = null;
 
 	private JComponent titlePane;
@@ -67,6 +76,7 @@ public class CopyOfMainframe extends JFrame implements ActionListener, KeyListen
 		setUndecorated(true);
 		setResizable(false);
 		setPreferredSize(new Dimension(width, height));
+		setBackground(new Color(255,255,255,0));
 		setResizable(false);
 		setLocationRelativeTo(new Frame());
 	}
@@ -107,17 +117,14 @@ public class CopyOfMainframe extends JFrame implements ActionListener, KeyListen
 		wordSearchField.addActionListener(this);
 
 		topToolBar.add(wordSearchTips);
-
-		topToolBar.setBounds(0, 0, width, toolbarheight);
-		bottom.setBounds(0, toolbarheight, width, height - toolbarheight);
-		//add(topToolBar);
-		titlePane = new TitlePane();
-		MouseInputHandler handler = new MouseInputHandler();
 		
-		System.out.println(handler==null);
-		titlePane.addMouseListener(handler);
-		titlePane.addMouseMotionListener(handler);
+		titlePane = new TitlePane(this);
+	
 		titlePane.setBounds(0, 0, width, toolbarheight);
+		topToolBar.setBounds(0, titlepaneheight, width, toolbarheight);
+		bottom.setBounds(0, toolbarheight+titlepaneheight, width, height - toolbarheight-titlepaneheight);
+		
+		add(topToolBar);
 		add(titlePane);
 		add(bottom);
 		pack();
@@ -255,71 +262,5 @@ public class CopyOfMainframe extends JFrame implements ActionListener, KeyListen
 		new CopyOfMainframe().CreateUI();
 	}
 	
-	/**
-	 * Class handling mouse input to enable titlePane become drag-able and window become move-able.
-	 */
-	private class MouseInputHandler implements MouseInputListener {
-        private boolean isMovingWindow;
-        private int dragOffsetX;
-        private int dragOffsetY;
-        private static final int BORDER_DRAG_THICKNESS = 5;
-
-        public void mousePressed(MouseEvent ev) {
-            Point dragWindowOffset = ev.getPoint();
-            if (w != null) {
-                w.toFront();
-            }
-            Point convertedDragWindowOffset = SwingUtilities.convertPoint(
-                           w, dragWindowOffset, titlePane);
-
-            Frame f = null;
-            Dialog d = null;
-
-            if (w instanceof JFrame) {
-                f = (JFrame)w;
-            } else if (w instanceof Dialog) {
-                d = (Dialog)w;
-            }
-
-            int frameState = (f != null) ? f.getExtendedState() : 0;
-
-            if (titlePane.contains(convertedDragWindowOffset)) {
-                if ((f != null && ((frameState & Frame.MAXIMIZED_BOTH) == 0)
-                        || (d != null))
-                        && dragWindowOffset.y >= BORDER_DRAG_THICKNESS
-                        && dragWindowOffset.x >= BORDER_DRAG_THICKNESS
-                        && dragWindowOffset.x < w.getWidth()
-                            - BORDER_DRAG_THICKNESS) {
-                    isMovingWindow = true;
-                    dragOffsetX = dragWindowOffset.x;
-                    dragOffsetY = dragWindowOffset.y;
-                }
-            }
-            else if (f != null && f.isResizable()
-                    && ((frameState & Frame.MAXIMIZED_BOTH) == 0)
-                    || (d != null && d.isResizable())) {
-                dragOffsetX = dragWindowOffset.x;
-                dragOffsetY = dragWindowOffset.y;
-            }
-        }
-
-        public void mouseReleased(MouseEvent ev) {
-            isMovingWindow = false;
-        }
-
-        public void mouseDragged(MouseEvent ev) {
-            if (isMovingWindow) {
-                Point windowPt = MouseInfo.getPointerInfo().getLocation();
-                windowPt.x = windowPt.x - dragOffsetX;
-                windowPt.y = windowPt.y - dragOffsetY;
-                w.setLocation(windowPt);
-            }
-        }
-
-        public void mouseClicked(MouseEvent e) {}
-        public void mouseEntered(MouseEvent e) {}
-        public void mouseExited(MouseEvent e) {}
-        public void mouseMoved(MouseEvent e) {}
-	}
 }
 

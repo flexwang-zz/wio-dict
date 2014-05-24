@@ -24,9 +24,10 @@ public class WordPanel extends JPanel{
 	private ImagePanel imageArea;
 	private ImageAudioButton pronounceButton;
 	
+	private final static Color bgcolor= new Color(242, 242, 242);
 	public WordPanel(int width, int height) {
 		
-		setBackground(Color.white);
+		setBackground(bgcolor);
 		setPreferredSize(new Dimension(width, height));
 		setLayout(null);
 		createUI();
@@ -41,12 +42,14 @@ public class WordPanel extends JPanel{
         wordArea.setLineWrap(false);
         wordArea.setWrapStyleWord(true);
         wordArea.setEditable(false);
+        wordArea.setBackground(bgcolor);
         
         phoneticArea = new JTextArea();
         phoneticArea.setFont(new Font("Serif", Font.BOLD, 16));
         phoneticArea.setLineWrap(true);
         phoneticArea.setWrapStyleWord(true);
         phoneticArea.setEditable(false);
+        phoneticArea.setBackground(bgcolor);
         
         definitionArea = new DefinitionTabPanel();
         

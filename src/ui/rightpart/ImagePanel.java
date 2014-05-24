@@ -13,9 +13,10 @@ public class ImagePanel extends JPanel {
 	
 	private BufferedImage image = null;
 	private int width, height;
-
+	private final static Color bgcolor= new Color(242, 242, 242);
+	
 	public ImagePanel(int width, int height) {
-		setBackground(Color.WHITE);
+		setBackground(bgcolor);
 		this.width = width;
 		this.height = height;
 	}

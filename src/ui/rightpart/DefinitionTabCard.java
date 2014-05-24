@@ -17,17 +17,21 @@ public class DefinitionTabCard extends JPanel{
 	
 	private JTextArea definitionArea;
 	private JPanel exampleArea;
+	private final static Color bgcolor= new Color(242, 242, 242);
 	
 	public DefinitionTabCard(Definition definition) {
 		super();
 		
-		setBackground(Color.WHITE);
+		setBackground(bgcolor);
 		setBorder(BorderFactory.createEmptyBorder());
 		initDefinitionArea(definition);
 		initExampleArea(definition);
 		
 		this.setPreferredSize(new Dimension(400, 300));
 		setLayout(null);
+		
+		definitionArea.setBackground(bgcolor);
+		exampleArea.setBackground(bgcolor);
 		
 		add(definitionArea);
 		add(exampleArea);
@@ -49,10 +53,11 @@ public class DefinitionTabCard extends JPanel{
 		exampleArea = new JPanel();
 		int nexample = definition.examples.size();
 		exampleArea.setLayout(new GridLayout(nexample, 1));
-		exampleArea.setBackground(Color.WHITE);
+		exampleArea.setBackground(bgcolor);
 		for (int i=0; i<nexample; i++) {
 			JTextArea exaText = new JTextArea();
 			exaText.setFont(new Font("Serif", Font.PLAIN, 12));
+			exaText.setBackground(bgcolor);
 			exaText.setLineWrap(false);
 			exaText.setWrapStyleWord(true);
 			exaText.setEditable(false);

@@ -23,17 +23,17 @@ public class ListPanel extends JPanel{
 	public JScrollPane wordlistScroll;
 	public ListPanel(int width, int height, MouseListener mouseListener, KeyListener keyListener) {
 		setLayout(new BorderLayout());
-		setBackground(Color.WHITE);
+		setBackground(new Color(242,242,242));
 		setBorder(new EmptyBorder(0, 0, 0, 0)); 
 		setPreferredSize(new Dimension(width, height));
 		wordlist = new JList<String>();
-		//wordlist.setBackground(Color.GRAY);
 		wordlist.addMouseListener(mouseListener);
 		wordlist.addKeyListener(keyListener);
 		wordlistScroll = new JScrollPane(wordlist);
-		//wordlist.setPreferredSize(new Dimension(width, height));
 		wordlistScroll.setPreferredSize(new Dimension(width, height));
 		wordlistScroll.setVisible(false);
+		wordlist.setBackground(new Color(242,242,242));
+		wordlistScroll.setBackground(new Color(242,242,242));
 		add(wordlistScroll, BorderLayout.CENTER);
 	}
 	

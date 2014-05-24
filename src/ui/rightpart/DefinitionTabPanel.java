@@ -14,9 +14,10 @@ public class DefinitionTabPanel extends JTabbedPane{
 	
 	final static int width = 200;
 	final static int height = 200;
+	private final static Color bgcolor= new Color(242, 242, 242);
 	public DefinitionTabPanel() {
 		super();
-		setBackground(Color.WHITE);
+		setBackground(bgcolor);
 		setPreferredSize(new Dimension(width, height));
 	}
 	
